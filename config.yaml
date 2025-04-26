@@ -1,6 +1,6 @@
 baseurl: /
 languageCode: en-US
-title: A Hugo website
+title: JDs Data Science
 theme: hugo-lithium
 ignoreFiles:
   - \.Rmd$
