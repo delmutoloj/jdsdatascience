@@ -28,7 +28,7 @@ params:
   logo:
     alt: Logo
     height: 50
-    url: logo.png
+    url: https://avatars.githubusercontent.com/u/194872112?s=96&v=4
     width: 50
 markup:
   defaultMarkdownHandler: goldmark
