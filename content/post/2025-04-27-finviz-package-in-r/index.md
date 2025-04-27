@@ -1,6 +1,6 @@
 ---
-title: "finViz Package in R"
-author: "James Del Mutolo"
+title: finViz Package in R
+author: 'James Del Mutolo'
 date: 2025-04-28
 categories: ["R"]
 tags: ["finViz", "financial", "R Package"]
