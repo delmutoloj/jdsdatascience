@@ -25,6 +25,7 @@ Body text
 
 ```{r echo=TRUE}
 # This is an R code chunk
+devtools::install_github("delmutoloj/finViz")
 library(finViz)
 sankey <- financialSankey(deposits, spending)
 sankey
