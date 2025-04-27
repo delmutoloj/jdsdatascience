@@ -1,0 +1,33 @@
+---
+title: "Switching to blogdown"
+author: "James Del Mutolo"
+date: 2025-04-26
+categories: ["R"]
+tags: ["R Markdown", "blogdown"]
+---
+
+
+
+After many failed attempts trying to post R Markdown to my Wordpress blog, I have decided to abandon Wordpress and switch to blogdown (an R package) which uses Hugo (a static site generator) to compile my content into a website. This content is pushed to a [GitHub repository](https://github.com/delmutoloj/jdsdatascience) that hosts the files for the website. [Netlify](https://www.netlify.com/) checks this repository for updates and will automatically rebuild the website when changes are pushed. I now have the ability to draft a post in R Markdown with a live html preview, and post directly to my blog all in RStudio.
+
+The best part: Everything is free, open source, and I can choose whoever I want to host my site, or even host it myself.
+
+The process of using the blogdown package is thoroughly outlined in Yihui Xie's [blogdown: Creating Websites with R Markdown](https://bookdown.org/yihui/blogdown/).
+
+After creating a blogdown project, I started a new GitHub repository and linked the RStudio project to the GitHub repo by running the following the the RStudio terminal tab:
+
+``` bash
+git remote add origin https://github.com/yourusername/yourrepo.git
+
+git add .
+git commit -m "Initial commit linking project to GitHub"
+git push -u origin main
+```
+
+You must setup a Personal Access Token on your GitHub account and use that for the password when prompted during the push. Ideally I should be using an SSH key.
+
+I then created a site with [Netlify](https://www.netlify.com/) that is based upon the GitHub repository and that was it.
+
+The blogdown package has been incredibly easy to use and will be instrumental for showcasing my R packages.
+
+Next, I would like to work on importing all my Wordpress posts to this blog. I also want to create a page that organizes all posts by category.
