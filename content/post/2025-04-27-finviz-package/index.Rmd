@@ -3,7 +3,30 @@ title: "finViz Package"
 author: 'James Del Mutolo'
 date: '2025-04-27'
 slug: finviz-package
-categories: []
-tags: []
+categories: ["R"]
+tags: ["finViz", "Financial", "R Package"]
 ---
-test
+
+In this post, I'll outline the different components of the finViz (Financial Visualization) package, walk you through how to use it, and share the process I followed to develop it.
+
+# Functions
+
+### statementCombine()
+
+Body text
+
+### financialSummary()
+
+Body text
+
+### financialSankey()
+
+**Disclosure**: This function was created with significant help from ChatGPT. I will go over the specific prompts I used and offer my insight on using generative AI for coding later in this post. 
+
+```{r echo=TRUE}
+# This is an R code chunk
+library(finViz)
+sankey <- financialSankey(deposits, spending)
+sankey
+```
+
