@@ -7,38 +7,217 @@ categories: ["R"]
 tags: ["finViz", "Financial", "R Package"]
 ---
 
-<script src="{{< blogdown/postref >}}index_files/htmlwidgets/htmlwidgets.js"></script>
-<script src="{{< blogdown/postref >}}index_files/d3/d3.min.js"></script>
-<script src="{{< blogdown/postref >}}index_files/sankey/sankey.js"></script>
-<script src="{{< blogdown/postref >}}index_files/sankeyNetwork-binding/sankeyNetwork.js"></script>
 
-In this post, I’ll outline the different components of the finViz (Financial Visualization) package, walk you through how to use it, and share the process I followed to develop it.
+
+I created the finViz (Financial Visualization) package to generate monthly financial summaries and visuals of my personal finances.
+
+In this post, I'll outline the different components of the finViz package, walk you through how to use it, and share the process I followed to develop it.
+
+To begin, the finViz package can be installed from GitHub using the install_github() function from devtools
+
+``` r
+devtools::install_github("delmutoloj/finViz")
+```
+
+[GitHub Repository](https://github.com/delmutoloj/finViz)
+
+# Datasets
+
+The package contains two datasets...
+
+**finViz::deposits**
+
+I maintain a spreadsheet with all deposits into my checking account. I use the read.csv function to import this dataframe into R as "deposits". This dataframe also includes employer 401k contributions so that they are appropriately accounted for in the deductions. I've included an example deposits dataset to use with the package's functions.
+
+Deposit data contains the following columns:
+- Date: Date of transaction in format YYYY-MM-DD
+- Merchant: Where the transaction was made
+- Category: Spending category
+- Note: Note about the transaction (optional)
+- Amount: Transaction total
+
+
+``` r
+head(finViz::deposits, 5)
+```
+
+```
+##         Date              Merchant             Category Note  Amount
+## 1 2025-04-11 Employer Contribution 401k: Employer Match   NA   46.93
+## 2 2025-04-11            Enterprise            Gross Pay   NA 1173.15
+## 3 2025-04-16                   ATM         Cash Deposit   NA   20.00
+## 4 2025-04-20                Amazon               Refund   NA   92.29
+## 5 2025-04-25 Employer Contribution 401k: Employer Match   NA   66.16
+```
+
+**finViz::spending**
+
+The example spending dataset contains transaction data combined from: credit card statements, a checking account statement, and payroll deductions.
+
+This data is an output of the statementCombine() function and contains the same columns as the spending data.
+
+
+``` r
+head(finViz::spending, 5)
+```
+
+```
+##         Date Merchant    Category Note Amount
+## 1 2025-04-02   Amazon        Home   NA  55.36
+## 2 2025-04-03   Panera   Fast Food   NA   9.51
+## 3 2025-04-07 7-Eleven Convenience   NA   1.79
+## 4 2025-04-09  Walmart   Groceries   NA  94.49
+## 5 2025-04-10   Panera   Fast Food   NA   5.02
+```
 
 # Functions
 
 ### statementCombine()
 
-Body text
+The statementCombine() function is used to combine .csv files directly into a single dataframe in R. This function allows me to maintain statement spreadsheets for each of my credit cards, checking account, and deductions, and combine them all into R in a dataframe named "spending".
+
+The function is passed the file names of the .csv files in the working directory that are to be combined.
+
+Example:
+
+``` r
+statements <- c("credit1.csv", "credit2.csv", "checking.csv", "deductions.csv")
+spending <- statementCombine(statements)
+```
 
 ### financialSummary()
 
-Body text
+The financialSummary() function accepts the two dataframes, spending and deposits, and returns a list of useful information including:
+- Total Income
+- Total Expenses
+- Net balance
+- Spending by category
+- Spending by merchant
+
+Example:
+
+``` r
+financialSummary(deposits, spending)
+```
+
+```
+## Total Income:  3052.46 
+## Total Expenses:  2624.8 
+## Net Balance (Income - Expenses):  427.66 
+## 
+## Spending by Category:
+##           Category Amount
+## 1              Car 626.42
+## 2       Retirement 537.38
+## 3          Savings 430.00
+## 4            Taxes 397.12
+## 5        Groceries 157.35
+## 6        Insurance 133.18
+## 7  Online Shopping 107.61
+## 8             Home  55.36
+## 9            Phone  55.00
+## 10       Fast Food  52.47
+## 11    Subscription  29.95
+## 12     Convenience  20.85
+## 13         Clothes  17.12
+## 14   Entertainment   4.99
+## 
+## Spending by Merchant:
+##                       Merchant Amount
+## 1                 GM Financial 479.31
+## 2                 Money Market 430.00
+## 3                   401k: Roth 282.93
+## 4                      Fed W/H 190.43
+## 5                         FICA 167.51
+## 6                       Amazon 162.97
+## 7                        Geico 147.11
+## 8                401k: Pre-Tax 141.36
+## 9                      Walmart 135.66
+## 10                 Medical Ins 118.18
+## 11 401k: Employer Contribution 113.09
+## 12                     Cashapp  55.00
+## 13                      Panera  45.31
+## 14                     Fed MWT  39.18
+## 15                      Publix  21.69
+## 16                      Platos  17.12
+## 17                    7-Eleven  15.54
+## 18               Amazon: Prime  15.13
+## 19            Panera: Sip Club  12.83
+## 20               Serenity Sips   7.16
+## 21                  Dental Ins   7.06
+## 22                    Racetrac   5.31
+## 23                  Play Store   4.99
+## 24                  Vision Ins   4.94
+## 25                    Life Ins   2.14
+## 26                      Google   1.99
+## 27              Disability Ins   0.86
+```
+
 
 ### financialSankey()
 
-**Disclosure**: This function was created with significant help from ChatGPT. I will go over the specific prompts I used and offer my insight on using generative AI for coding later in this post.
+**Disclosure**: This function was created with significant help from ChatGPT. I will go over the specific prompts I used and offer my insight on using generative AI for coding later in this post. 
+
+The financialSankey() function accepts deposit and spending data, and returns an interactive sankey diagram that can be used to visualize the flow of money through different categories and merchants.
+
+This function is built with the sankeyNetwork() function from the networkD3 package.
+
+The function groups spending categories "Taxes", "Insurance", and "Retirement" into a "Deductions" node.
+
+Net income is calculated by subtracting deductions from all deposits.
+
+Example:
+
 
 ``` r
-# This is an R code chunk
-library(finViz)
+# Create sankey object
 sankey <- financialSankey(deposits, spending)
 ```
 
-    ## Links is a tbl_df. Converting to a plain data frame.
-
-``` r
-sankey
+```
+## Links is a tbl_df. Converting to a plain data frame.
 ```
 
-<div id="htmlwidget-1" style="width:1920px;height:1080px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1">{"x":{"links":{"source":[0,1,2,3,4,4,6,6,6,8,8,8,8,8,9,9,9,7,7,7,5,5,5,5,5,5,5,5,5,5,5,10,10,11,12,12,13,14,14,15,15,16,17,18,19,20,20,20],"target":[4,4,4,4,5,6,8,9,7,27,35,36,26,28,29,30,31,33,34,32,10,11,12,13,14,15,16,17,18,19,20,41,42,38,23,37,45,22,44,25,24,21,21,47,39,40,46,43],"value":[113.09,20,2827.08,92.29000000000001,1984.78,1067.68,133.18,537.38,397.12,7.06,0.86,2.14,118.18,4.94,113.09,141.36,282.93,167.51,39.18,190.43,626.4200000000001,17.12,20.85,4.99,52.47,157.35,55.36,107.61,55,430,29.95,479.31,147.11,17.12,15.54,5.31,4.99,45.31,7.16,21.69,135.66,55.36,107.61,55,430,15.13,1.99,12.83]},"nodes":{"name":["401k: Employer Match","Cash Deposit","Gross Pay","Refund","Gross Income","Net Income","Deductions","Taxes","Insurance","Retirement","Car","Clothes","Convenience","Entertainment","Fast Food","Groceries","Home","Online Shopping","Phone","Savings","Subscription","Amazon","Panera","7-Eleven","Walmart","Publix","Medical Ins","Dental Ins","Vision Ins","401k: Employer Contribution","401k: Pre-Tax","401k: Roth","Fed W/H","FICA","Fed MWT","Disability Ins","Life Ins","Racetrac","Platos","Money Market","Amazon: Prime","GM Financial","Geico","Panera: Sip Club","Serenity Sips","Play Store","Google","Cashapp"],"group":["401k: Employer Match","Cash Deposit","Gross Pay","Refund","Gross Income","Net Income","Deductions","Taxes","Insurance","Retirement","Car","Clothes","Convenience","Entertainment","Fast Food","Groceries","Home","Online Shopping","Phone","Savings","Subscription","Amazon","Panera","7-Eleven","Walmart","Publix","Medical Ins","Dental Ins","Vision Ins","401k: Employer Contribution","401k: Pre-Tax","401k: Roth","Fed W/H","FICA","Fed MWT","Disability Ins","Life Ins","Racetrac","Platos","Money Market","Amazon: Prime","GM Financial","Geico","Panera: Sip Club","Serenity Sips","Play Store","Google","Cashapp"]},"options":{"NodeID":"name","NodeGroup":"name","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":12,"fontFamily":null,"nodeWidth":25,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":50,"sinksRight":true}},"evals":[],"jsHooks":{"render":[{"code":"\n      function(el, x){\n        d3.select(el).selectAll(\".node text\")\n          .text(d => d.name + \" (\" + d3.format(\"(.0f\")(d.value) + \")\");\n      }\n    ","data":null}]}}</script>
+``` r
+# Save html
+htmlwidgets::saveWidget(sankey, "sankey_temp.html")
+
+webshot2::webshot("sankey_temp.html", file = "sankey_plot.png", vwidth = 1280, vheight = 720)
+```
+
+```
+## file:///C:/Users/delmu/Documents/blogdown_site/jdsdatascience/content/post/2025-04-27-finviz-package/sankey_temp.html screenshot completed
+```
+
+<img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-7-1.png" width="672" />
+
+I tried to get the text in the image as readable as possible, opening the image in a new tab helps. The function returns an interactive  html object that I could not get to resize correctly on this webpage, so I saved the html and made a .png with the webshot2 package to display here. Normally, I just view the sankey output fullscreen in RStudio.
+
+# Use of Generative AI
+
+I have been maintaining spreadsheets of my monthly finances and I was wondering if it was possible to create a sankey diagram with this data in R.
+
+So I searched the internet for a package that can create a sankey diagram and quickly found the networkD3 package.
+
+I was curious if ChatGPT could interpret my spreadsheets and infer from the networkD3 documentation to create the visual I wanted so I uploaded my data and made the following query.
+
+>In R, how would I use the sankeyNetwork() function from the networkD3 package to create a sankey diagram that show the flow of income and expenses using this example data.
+
+The code it generated did not work initially and required some error troubleshooting, but soon I was able to create a crude visual.
+
+This process let me to familiarize myself with the specific components of the sankeyNetwork() function, allowing me to refine the code further and make more advanced queries.
+
+I eventually ended up with a basic visual that displayed net income and expenses, but I wanted to make it more advanced and include gross income, split off into net income and deductions.
+
+So I provided ChatGPT with the code I had at that point and made the following query:
+
+>All deposits should be named dynamically and summed into "Gross Income". Gross Income should then split off into "Net Income" and "Deductions".
+Net Income should be equal to Gross Income minus Deductions.
+Deductions should split off into the categories  "Taxes", "Insurance", and "Retirement". Those categories should split off into the merchant column.
+Net Income should split off into all of the dynamically named spending categories. And each of those spending categories should split off into their respective vendors.
+
+The code generated from this query required some minor bug fixes, but otherwise had perfectly implemented what I had described.
+
+
+
+
