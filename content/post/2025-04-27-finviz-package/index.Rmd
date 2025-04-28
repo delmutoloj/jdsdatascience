@@ -15,7 +15,7 @@ I created the finViz (Financial Visualization) package to generate monthly finan
 
 In this post, I'll outline the different components of the finViz package, walk you through how to use it, and share the process I followed to develop it.
 
-To begin, the finViz package can be installed from GitHub using the install_github() function from devtools
+To begin, the finViz package can be installed from GitHub using the install_github() function from devtools.
 ```{r eval=FALSE, include=TRUE}
 devtools::install_github("delmutoloj/finViz")
 ```
@@ -132,6 +132,6 @@ Net Income should split off into all of the dynamically named spending categorie
 
 The code generated from this query required some minor bug fixes, but otherwise had perfectly implemented what I had described.
 
-
+Generative AI is a very powerful and useful tool when programming, but using it to constructively generate code requires a defined end goal, and a through understanding of the methods that will need to be used in the code you are trying to generate.
 
 
