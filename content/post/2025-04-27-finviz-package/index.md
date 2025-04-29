@@ -13,6 +13,8 @@ I created the finViz (Financial Visualization) package to generate monthly finan
 
 In this post, I'll outline the different components of the finViz package, walk you through how to use it, and share the process I followed to develop it.
 
+
+
 To begin, the finViz package can be installed from GitHub using the install_github() function from devtools.
 
 ``` r
@@ -25,7 +27,7 @@ devtools::install_github("delmutoloj/finViz")
 
 The package contains two datasets...
 
-**finViz::deposits**
+### finViz::deposits
 
 I maintain a spreadsheet with all deposits into my checking account. I use the read.csv function to import this dataframe into R as "deposits". This dataframe also includes employer 401k contributions so that they are appropriately accounted for in the deductions. I've included an example deposits dataset to use with the package's functions.
 
@@ -50,7 +52,7 @@ head(finViz::deposits, 5)
 ## 5 2025-04-25 Employer Contribution 401k: Employer Match   NA   66.16
 ```
 
-**finViz::spending**
+### finViz::spending
 
 The example spending dataset contains transaction data combined from: credit card statements, a checking account statement, and payroll deductions.
 
@@ -72,7 +74,7 @@ head(finViz::spending, 5)
 
 # Functions
 
-### statementCombine()
+### finViz::statementCombine()
 
 The statementCombine() function is used to combine .csv files directly into a single dataframe in R. This function allows me to maintain statement spreadsheets for each of my credit cards, checking account, and deductions, and combine them all into R in a dataframe named "spending".
 
@@ -85,7 +87,7 @@ statements <- c("credit1.csv", "credit2.csv", "checking.csv", "deductions.csv")
 spending <- statementCombine(statements)
 ```
 
-### financialSummary()
+### finViz::financialSummary()
 
 The financialSummary() function accepts the two dataframes, spending and deposits, and returns a list of useful information including:
 - Total Income
@@ -154,7 +156,7 @@ financialSummary(deposits, spending)
 ```
 
 
-### financialSankey()
+### finViz::financialSankey()
 
 **Disclosure**: This function was created with significant help from ChatGPT. I will go over the specific prompts I used and offer my insight on using generative AI for coding later in this post. 
 
@@ -163,8 +165,6 @@ The financialSankey() function accepts deposit and spending data, and returns an
 This function is built with the sankeyNetwork() function from the networkD3 package.
 
 The function groups spending categories "Taxes", "Insurance", and "Retirement" into a "Deductions" node.
-
-Net income is calculated by subtracting deductions from all deposits.
 
 Example:
 
@@ -195,11 +195,11 @@ I tried to get the text in the image as readable as possible, opening the image 
 
 # Use of Generative AI
 
-I have been maintaining spreadsheets of my monthly finances and I was wondering if it was possible to create a sankey diagram with this data in R.
+I have been maintaining spreadsheets of my monthly finances and was wondering if it was possible to create a sankey diagram with this data in R.
 
 So I searched the internet for a package that can create a sankey diagram and quickly found the networkD3 package.
 
-I was curious if ChatGPT could interpret my spreadsheets and infer from the networkD3 documentation to create the visual I wanted so I uploaded my data and made the following query.
+I was curious if ChatGPT could interpret my spreadsheets and infer from the networkD3 documentation to create the visual I wanted, so I uploaded my data and made the following query.
 
 >In R, how would I use the sankeyNetwork() function from the networkD3 package to create a sankey diagram that show the flow of income and expenses using this example data.
 
@@ -220,4 +220,10 @@ The code generated from this query required some minor bug fixes, but otherwise 
 
 Generative AI is a very powerful and useful tool when programming, but using it to constructively generate code requires a defined end goal, and a through understanding of the methods that will need to be used in the code you are trying to generate.
 
+# Improvements
 
+The main improvement I would like to work on is to add more arguments to the financialSankey() function. It would be useful to be able to modify font size, node width, node padding, and other arguments used within the function as needed.
+
+I could also make some improvements to the financialSummary() function to have it include gross income, net income, deductions, and net balance.
+
+This package and its functions are designed specifically for the workflow that I have developed for myself. Adding more advanced arguments to the functions in this package would allow it to be useful to more people.
