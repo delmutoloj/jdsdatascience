@@ -17,6 +17,7 @@ In this post, I'll outline the different components of the finViz package, walk 
 
 To begin, the finViz package can be installed from GitHub using the install_github() function from devtools.
 
+
 ``` r
 devtools::install_github("delmutoloj/finViz")
 ```
@@ -82,6 +83,7 @@ The function is passed the file names of the .csv files in the working directory
 
 Example:
 
+
 ``` r
 statements <- c("credit1.csv", "credit2.csv", "checking.csv", "deductions.csv")
 spending <- statementCombine(statements)
@@ -97,6 +99,7 @@ The financialSummary() function accepts the two dataframes, spending and deposit
 - Spending by merchant
 
 Example:
+
 
 ``` r
 financialSummary(deposits, spending)
@@ -201,7 +204,7 @@ So I searched the internet for a package that can create a sankey diagram and qu
 
 I was curious if ChatGPT could interpret my spreadsheets and infer from the networkD3 documentation to create the visual I wanted, so I uploaded my data and made the following query.
 
->In R, how would I use the sankeyNetwork() function from the networkD3 package to create a sankey diagram that show the flow of income and expenses using this example data.
+>In R, how would I use the sankeyNetwork() function from the networkD3 package to create a sankey diagram that shows the flow of income and expenses using this example data.
 
 The code it generated did not work initially and required some error troubleshooting, but soon I was able to create a crude visual.
 
@@ -218,7 +221,7 @@ Net Income should split off into all of the dynamically named spending categorie
 
 The code generated from this query required some minor bug fixes, but otherwise had perfectly implemented what I had described.
 
-Generative AI is a very powerful and useful tool when programming, but using it to constructively generate code requires a defined end goal, and a through understanding of the methods that will need to be used in the code you are trying to generate.
+Generative AI is a very powerful and useful tool when programming, but using it to constructively generate code requires a defined end goal, and a thorough understanding of the methods that will need to be used in the code you are trying to generate.
 
 # Improvements
 

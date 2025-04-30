@@ -18,6 +18,7 @@ In this post, I'll outline the different components of the finViz package, walk 
 
 
 To begin, the finViz package can be installed from GitHub using the install_github() function from devtools.
+
 ```{r eval=FALSE, include=TRUE}
 devtools::install_github("delmutoloj/finViz")
 ```
@@ -62,6 +63,7 @@ The statementCombine() function is used to combine .csv files directly into a si
 The function is passed the file names of the .csv files in the working directory that are to be combined.
 
 Example:
+
 ```{r eval=FALSE, include=TRUE}
 statements <- c("credit1.csv", "credit2.csv", "checking.csv", "deductions.csv")
 spending <- statementCombine(statements)
@@ -77,6 +79,7 @@ The financialSummary() function accepts the two dataframes, spending and deposit
 - Spending by merchant
 
 Example:
+
 ```{r echo=TRUE}
 financialSummary(deposits, spending)
 ```
